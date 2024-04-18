@@ -3,6 +3,7 @@ from data import db_session
 from data.users import User
 from flask_login import LoginManager, login_user, logout_user, login_required
 from data.forms.login import LoginForm
+from data.forms.register import RegisterForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ODINDVATRI'
@@ -24,6 +25,23 @@ def login():
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
+@app.route('/register', methods=['GET','POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = User()
+        user.name = form.name.data
+        user.email = form.email.data
+        user.set_password(form.password.data)
+        db_sess.add(user)
+        db_sess.commit()
+        return redirect("/")
+
+
+    return render_template('register.html', title='Регистрация', form=form)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
@@ -35,9 +53,7 @@ def logout():
     logout_user()
     return redirect("/")
 
-@app.route('/register')
-def logout():
-    return
+
 
 
 @app.route('/')

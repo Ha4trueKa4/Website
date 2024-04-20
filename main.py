@@ -1,6 +1,7 @@
 from flask import Flask, redirect, render_template, jsonify, make_response
 from data import db_session
 from data.users import User
+from data.courses import Course
 from flask_login import LoginManager, login_user, logout_user, login_required
 from data.forms.login import LoginForm
 from data.forms.register import RegisterForm
@@ -46,7 +47,7 @@ def register():
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
+    return db_sess.get(User, user_id)
 
 
 @app.route('/logout')

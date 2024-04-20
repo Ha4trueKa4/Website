@@ -20,8 +20,12 @@
                 <a href="/teach" class="a-left">Преподавание</a>
             </div>
             <div class="header-right">
-                <a href="/register" class="btn btn-primary">Зарегистрироваться</a>
-                <a href="/login" class="btn btn-success">Войти</a>
+                {% if current_user.is_authenticated %}
+                <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+                {% else %}
+                    <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+                    <a class="btn btn-success" href="/login">Войти</a>
+                {% endif %}
             </div>
         </header>
 

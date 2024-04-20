@@ -6,10 +6,11 @@ from data.forms.login import LoginForm
 from data.forms.register import RegisterForm
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'ODINDVATRI'
+app.config['SECRET_KEY'] = 'Gdagdegdagdagdo'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -25,7 +26,8 @@ def login():
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
-@app.route('/register', methods=['GET','POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -38,7 +40,6 @@ def register():
         db_sess.commit()
         return redirect("/")
 
-
     return render_template('register.html', title='Регистрация', form=form)
 
 
@@ -47,6 +48,7 @@ def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
 
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -54,11 +56,10 @@ def logout():
     return redirect("/")
 
 
-
-
 @app.route('/')
 def main_page():
-    return render_template('base.html', title='ГЛАВНАЯ СТРАНИЦА')
+    return render_template('main.html', title='ГЛАВНАЯ СТРАНИЦА')
+
 
 def main():
     db_session.global_init("db/database.db")

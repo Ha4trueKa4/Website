@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block link %}
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="../static/css/sidebar.css">
+{% endblock %}
+
+{% block sidebar %}
+    <nav class="sidebar">
+        <div class="sidebar-up">
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/co-project">Совместные проекты</a></li>
+                <li><a href="question">Вопросы</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-down">
+            <ul>
+                <li><a href="/help">Помощь</a></li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <h1>Добро пожаловать на Bludik!</h1>
+    <p>Здесь будет ваш основной контент.</p>
+{% endblock %}

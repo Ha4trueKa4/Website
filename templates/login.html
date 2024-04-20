@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block link %}
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="../static/css/login.css">
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
 {% block content %}
     <form action="" method="post">
         {{ form.hidden_tag() }}

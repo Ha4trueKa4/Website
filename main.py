@@ -39,9 +39,18 @@ def register():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
-        return redirect("/")
+        return redirect("/login")
 
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/learn', methods=['GET'])
+def show_courses():
+    db_session.global_init('database.db')
+    db_sess = db_session.create_session()
+    courses = db_sess.query(Course).all()
+    users = db_sess.query(User).all()
+    return render_template('list_of_courses.html', courses=courses, users=users)
 
 
 @login_manager.user_loader
@@ -61,9 +70,19 @@ def logout():
 def main_page():
     return render_template('main.html', title='ГЛАВНАЯ СТРАНИЦА')
 
+def test():
+    user = User()
+    user.name = "DEAN"
+    user.email = 'k@gmail.com'
+    user.set_password('12345')
+    user.completed_courses = ' '
+    db_sess = db_session.create_session()
+    db_sess.add(user)
+    db_sess.commit()
 
 def main():
     db_session.global_init("db/database.db")
+
     app.run()
 
 

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block link %}
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="../static/css/sidebar.css">
+    <link rel="stylesheet" href="../static/css/teach.css">
+{% endblock %}
+
+{% block sidebar %}
+    <nav class="sidebar">
+        <div class="sidebar-up">
+            <a href="/create_course" class="btn btn-success create_btn">+ Новый курс</a>
+            <ul>
+                <li><a href="/courses">Курсы</a></li>
+                <li><a href="/lessons">Уроки</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-down">
+            <ul>
+                <li><a href="/help">Помощь</a></li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <h1>Курсы</h1>
+    <!-- Вот здесь сыктыр нужен цикл со всеми курсами -->
+{% endblock %}

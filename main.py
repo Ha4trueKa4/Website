@@ -44,6 +44,11 @@ def register():
     return render_template('register.html', title='Регистрация', form=form)
 
 
+@app.route('/teach')
+def teach():
+    return render_template('teach.html')
+
+
 @app.route('/learn', methods=['GET'])
 def show_courses():
     db_session.global_init('database.db')
@@ -70,6 +75,7 @@ def logout():
 def main_page():
     return render_template('main.html', title='ГЛАВНАЯ СТРАНИЦА')
 
+
 def test():
     user = User()
     user.name = "DEAN"
@@ -80,9 +86,9 @@ def test():
     db_sess.add(user)
     db_sess.commit()
 
+
 def main():
     db_session.global_init("db/database.db")
-
     app.run()
 
 

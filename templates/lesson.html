@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block link %}
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="../static/css/login.css">
+    <link rel="stylesheet" href="../static/css/sidebar.css">
+{% endblock %}
+
+{% block sidebar %}<nav class="sidebar">
+        <div class="sidebar-up">
+            <ul>
+                <li><a href="../learn">Главная</a></li>
+                <li><a href="../learn/co-project">Совместные проекты</a></li>
+                <li><a href="../learn/question">Вопросы</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-down">
+            <ul>
+                <li><a href="/help">Помощь</a></li>
+            </ul>
+        </div>
+    </nav>{% endblock %}
+
+{% block content %}
+<form action="" method="post">
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 2px solid rgb(140 140 140);
+            font-family: sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        caption {
+            caption-side: top;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        thead,
+        tfoot {
+            background-color: rgb(228 240 245);
+        }
+
+        th,
+        td {
+            border: 1px solid rgb(160 160 160);
+            padding: 8px 10px;
+        }
+
+        td:last-of-type {
+            text-align: center;
+        }
+
+        tbody>tr:nth-of-type(even) {
+            background-color: rgb(237 238 242);
+        }
+
+        tfoot th {
+            text-align: right;
+        }
+
+        tfoot td {
+            font-weight: bold;
+        }
+    </style>
+    <h1>
+        {{lesson.name}}
+    </h1>
+    <p>
+        {{ lesson.lesson_text }}
+    </p>
+</form>
+{% endblock %}

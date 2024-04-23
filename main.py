@@ -2,6 +2,7 @@ from flask import Flask, redirect, render_template, jsonify, make_response
 from data import db_session
 from data.users import User
 from data.courses import Course
+from data.lessons import TextLesson
 from flask_login import LoginManager, login_user, logout_user, login_required
 from data.forms.login import LoginForm
 from data.forms.register import RegisterForm
@@ -37,6 +38,7 @@ def register():
         user.name = form.name.data
         user.email = form.email.data
         user.set_password(form.password.data)
+        user.completed_courses = ' '
         db_sess.add(user)
         db_sess.commit()
         return redirect("/login")
@@ -69,6 +71,28 @@ def load_user(user_id):
 def logout():
     logout_user()
     return redirect("/")
+
+
+@app.route('/courses/<string:name>')
+@login_required
+def show_course(name):
+    db_session.global_init('database.db')
+    db_sess = db_session.create_session()
+    course = db_sess.query(Course).filter(Course.name == name).first()
+    users = db_sess.query(User).all()
+    text_lessons = db_sess.query(TextLesson).filter(TextLesson.course_id == course.id).all()
+    return render_template('course.html', course=course, users=users, text_lessons=text_lessons)
+
+
+@app.route('/courses/<string:course_name>/<string:lesson_name>')
+@login_required
+def show_lesson(course_name, lesson_name):
+    db_session.global_init('database.db')
+    db_sess = db_session.create_session()
+    course = db_sess.query(Course).filter(Course.name == course_name).first()
+    lesson = db_sess.query(TextLesson).filter(TextLesson.name == lesson_name).first()
+    return render_template('lesson.html', lesson=lesson, course=course)
+
 
 
 @app.route('/')

@@ -73,25 +73,25 @@ def logout():
     return redirect("/")
 
 
-@app.route('/courses/<string:name>')
+@app.route('/learn/<string:name>')
 @login_required
 def show_course(name):
     db_session.global_init('database.db')
     db_sess = db_session.create_session()
     course = db_sess.query(Course).filter(Course.name == name).first()
-    users = db_sess.query(User).all()
     text_lessons = db_sess.query(TextLesson).filter(TextLesson.course_id == course.id).all()
-    return render_template('course.html', course=course, users=users, text_lessons=text_lessons)
+    return render_template('course.html', course=course, text_lessons=text_lessons)
 
 
-@app.route('/courses/<string:course_name>/<string:lesson_name>')
+@app.route('/learn/<string:course_name>/<string:lesson_name>')
 @login_required
 def show_lesson(course_name, lesson_name):
     db_session.global_init('database.db')
     db_sess = db_session.create_session()
     course = db_sess.query(Course).filter(Course.name == course_name).first()
     lesson = db_sess.query(TextLesson).filter(TextLesson.name == lesson_name).first()
-    return render_template('lesson.html', lesson=lesson, course=course)
+    text_lessons = db_sess.query(TextLesson).filter(TextLesson.course_id == course.id).all()
+    return render_template('lesson.html', lesson=lesson, course=course, text_lessons=text_lessons)
 
 
 

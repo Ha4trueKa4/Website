@@ -2,7 +2,8 @@ from flask import Flask, redirect, render_template, jsonify, make_response
 from data import db_session
 from data.users import User
 from data.courses import Course
-from data.lessons import TextLesson
+from data.lessons import Lesson
+from data.tasks import Task
 from flask_login import LoginManager, login_user, logout_user, login_required
 from data.forms.login import LoginForm
 from data.forms.register import RegisterForm
@@ -52,7 +53,7 @@ def teach():
 
 
 @app.route('/learn', methods=['GET'])
-def show_courses():
+def learn():
     db_session.global_init('database.db')
     db_sess = db_session.create_session()
     courses = db_sess.query(Course).all()
@@ -73,26 +74,57 @@ def logout():
     return redirect("/")
 
 
-@app.route('/learn/<string:name>')
+@app.route('/learn/<string:course_name>')
 @login_required
-def show_course(name):
-    db_session.global_init('database.db')
-    db_sess = db_session.create_session()
-    course = db_sess.query(Course).filter(Course.name == name).first()
-    text_lessons = db_sess.query(TextLesson).filter(TextLesson.course_id == course.id).all()
-    return render_template('course.html', course=course, text_lessons=text_lessons)
+def course(course_name):
+    course, lesson, lessons = get_data(course_name, None)
+    return render_template('course.html', course=course, lessons=lessons)
 
 
 @app.route('/learn/<string:course_name>/<string:lesson_name>')
 @login_required
-def show_lesson(course_name, lesson_name):
+def lesson(course_name, lesson_name):
+    course, lesson, lessons = get_data(course_name, lesson_name)
+    return render_template('lesson.html', lesson=lesson, course=course, lessons=lessons)
+
+def get_data(course_name, lesson_name):
+    course, lesson, lessons = None, None, None
     db_session.global_init('database.db')
     db_sess = db_session.create_session()
-    course = db_sess.query(Course).filter(Course.name == course_name).first()
-    lesson = db_sess.query(TextLesson).filter(TextLesson.name == lesson_name).first()
-    text_lessons = db_sess.query(TextLesson).filter(TextLesson.course_id == course.id).all()
-    return render_template('lesson.html', lesson=lesson, course=course, text_lessons=text_lessons)
+    if course_name:
+        course = db_sess.query(Course).filter(Course.name == course_name).first()
+    if lesson_name:
+        lesson = db_sess.query(Lesson).filter(Lesson.name == lesson_name).first()
 
+    lessons = db_sess.query(Lesson).filter(Lesson.course_id == course.id).all()
+    return course, lesson, lessons
+
+
+@app.route('/learn/<string:course_name>/<string:lesson_name>/theory')
+@login_required
+def theory(course_name, lesson_name):
+    course, lesson, lessons = get_data(course_name, lesson_name)
+    return render_template('theory.html', lesson=lesson, course=course, lessons=lessons)
+
+
+@app.route('/learn/<string:course_name>/<string:lesson_name>/tasks')
+@login_required
+def tasks(course_name, lesson_name):
+    course, lesson, lessons = get_data(course_name, lesson_name)
+    db_session.global_init('database.db')
+    db_sess = db_session.create_session()
+    tasks = db_sess.query(Task).filter(Task.lesson_id == lesson.id).all()
+    return render_template('list_of_tasks.html', lesson=lesson, course=course, lessons=lessons, tasks=tasks)
+
+@app.route('/learn/<string:course_name>/<string:lesson_name>/tasks/<int:task_id>')
+@login_required
+def task(course_name, lesson_name, task_id):
+    course, lesson, lessons = get_data(course_name, lesson_name)
+    db_session.global_init('database.db')
+    db_sess = db_session.create_session()
+    tasks = db_sess.query(Task).filter(Task.lesson_id == lesson.id).all()
+    return render_template('task.html', lesson=lesson
+                           , course=course, lessons=lessons, tasks=tasks, task_id=task_id)
 
 
 @app.route('/')

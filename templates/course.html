@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-
-
-
-
     {% block link %}
     <script src="https://kit.fontawesome.com/242e94568a.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../static/css/header.css">
@@ -14,17 +10,19 @@
 
 {% block sidebar %}
     <nav class="sidebar">
-            <div class="content-course">
-                <a href="/learn/{{ course.name }}"class="name-course">Название курса zxc coil coil</a>
-            </div>
-            <div class="content-lesson">
-                    <ul>
-                        {% for lesson in text_lessons %}
-                        <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{ lesson.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-            </div>
-        </nav>
+        <div class="content-course">
+            <a href="/learn/{{ course.name }}"class="name-course"> {{ course.name }}</a>
+        </div>
+        <div class="content-lesson">
+            <ul>
+                {% set i = 1%}
+                {% for lesson in lessons %}
+                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{i}}. {{ lesson.name }}</a></li>
+                {%set i = 1 + i%}
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
 {% endblock %}
 
 {% block content %}

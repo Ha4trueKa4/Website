@@ -89,7 +89,7 @@
                     {{course.description}}
                 </td>
                 <td>
-                    {{course.list_of_lessons.split(', ')|length}} уроков
+                    {{course.list_of_lessons.split(', ')|length - 1}} уроков
                 </td>
                 <td>
                     {{users[course.user_id - 1].name}}
@@ -99,12 +99,11 @@
                     {%if course.id in current_user.completed_courses.split(', ')%}
                     Пройден
                     {%else%}
-                    Не Пройден
+                    Не пройден
                     {%endif%}
                     {%else%}
                     Войдите в аккаунт чтобы узнать статус
                     {%endif%}
-
                 </td>
             </tr>
 

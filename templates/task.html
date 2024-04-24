@@ -27,20 +27,32 @@
 
 {% block content %}
 
-<div class="main-content-course content-shadow">
-    <h1> {{ lesson.name }} </h1>
-    <ol>
-        <li>Первая тема</li>
-        <li>Вторая тема</li>
-    </ol>
-</div>
+{% set task = tasks[task_id - 1]%}
 
-<div onclick="location.href='/learn/{{ course.name }}/{{ lesson.name }}/theory'" class="main-content-course content-shadow press-link">
-    <h2><i class="fa-solid fa-bookmark"></i> Прочитать теорию</h2>
-</div>
+<div class="main-content">
+    <div class="main-content-course content-shadow">
+        <h5>{{ task.name }}</h5>
+    </div>
 
-<div onclick="location.href='/learn/{{ course.name }}/{{ lesson.name }}/tasks'" class="main-content-course content-shadow press-link">
-    <h2><i class="fa-solid fa-pen-to-square"></i> Выполнить задания</h2>
-</div>
+    <div class="main-content-course content-shadow">
+        <p>{{ task.question }}<p>
+        <form action="post">
+            <div>
+                {% for option in task.options.split(', ')%}
+                <div>
+                    <input type="radio" id="{{ option }}" name="answer">
+                    <label for="{{ option }}">{{ option }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
 
+    <div>
+        <div onclick="location.href='/learn/{{ course.name }}/{{ lesson.name }}/tasks'" class="main-content-course content-shadow press-link">
+            <h2><i class="fa-solid fa-pen-to-square"></i>Ответить</h2>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

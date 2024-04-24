@@ -24,23 +24,16 @@
         </div>
     </nav>
 {% endblock %}
-
 {% block content %}
 
-<div class="main-content-course content-shadow">
-    <h1> {{ lesson.name }} </h1>
-    <ol>
-        <li>Первая тема</li>
-        <li>Вторая тема</li>
-    </ol>
+<div class="main-content">
+    {% set i = 1%}
+    {% for task in tasks%}
+    <div class="main-content-course content-shadow">
+        <h1>{{ task.name }}</h1>
+        <a href="/learn/{{ course.name }}/{{ lesson.name }}/tasks/{{i}}"> Перейти </a>
+    </div>
+    {%set i = 1 + i%}
+    {% endfor %}
 </div>
-
-<div onclick="location.href='/learn/{{ course.name }}/{{ lesson.name }}/theory'" class="main-content-course content-shadow press-link">
-    <h2><i class="fa-solid fa-bookmark"></i> Прочитать теорию</h2>
-</div>
-
-<div onclick="location.href='/learn/{{ course.name }}/{{ lesson.name }}/tasks'" class="main-content-course content-shadow press-link">
-    <h2><i class="fa-solid fa-pen-to-square"></i> Выполнить задания</h2>
-</div>
-
 {% endblock %}

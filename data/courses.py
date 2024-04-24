@@ -17,4 +17,4 @@ class Course(SqlAlchemyBase, UserMixin, SerializerMixin):
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     user = orm.relationship('User')
 
-    text_lessons = orm.relationship("TextLesson", back_populates='course')
+    lessons = orm.relationship("Lesson", back_populates='course')

@@ -18,7 +18,7 @@
                 {% for lesson in lessons %}
                 <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{loop.index}}. {{ lesson.name }}
                     {% if current_user.id | string() in lesson.completed_by_users%}
-                    ГАЛОЧКА
+                    <i class="fa-solid fa-check"></i>
                     {% endif %}
                 </a></li>
                 {% endfor %}

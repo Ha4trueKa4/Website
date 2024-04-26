@@ -52,7 +52,7 @@
                     </td>
                     <td>
                         {% if current_user.is_authenticated %}
-                        {%if course.id in current_user.completed_courses.split(', ')%}
+                        {%if course.id | string() in current_user.completed_courses%}
                         Пройден
                         {%else%}
                         Не пройден

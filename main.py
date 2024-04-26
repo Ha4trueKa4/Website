@@ -18,8 +18,6 @@ login_manager.init_app(app)
 
 
 
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -48,6 +46,7 @@ def learn():
     db_sess = db_session.create_session()
     courses = db_sess.query(Course).all()
     users = db_sess.query(User).all()
+
     return render_template('list_of_courses.html', courses=courses, users=users)
 
 
@@ -68,6 +67,27 @@ def logout():
 @login_required
 def course(course_name):
     course, lesson, lessons = get_data(course_name, None)
+    is_course_completed = True
+    for lsn in lessons:
+        print(lsn.name)
+        if str(flask_login.current_user.id) not in lsn.completed_by_users:
+            is_course_completed = False
+            print('false')
+
+    db_session.global_init('database.db')
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == flask_login.current_user.id).first()
+    if is_course_completed:
+        user.completed_courses += f'{course.id}'
+    else:
+        user.completed_courses.replace(f'{course.id}', '')
+        tmp = list(user.completed_courses).copy()
+        for i in tmp:
+            if i == str(course.id):
+                tmp.remove(i)
+        user.completed_courses = ''.join(tmp)
+    db_sess.commit()
+
     return render_template('course.html', course=course, lessons=lessons)
 
 

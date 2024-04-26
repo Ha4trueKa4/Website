@@ -1,27 +1,40 @@
-.content-container {
-    margin-left: 290px;
-    padding: 20px;
+.content-container { 
+    margin-left: 290px; 
+    padding: 20px; 
+} 
+ 
+.sidebar { 
+    width: 300px; 
+    border-right: 1px solid lightgray; 
+    color: #fff; 
+    height: 100vh; 
+    position: fixed; 
+    top: 1; 
+    left: 0; 
+    z-index: 999; 
+    overflow-y: auto; 
+    background-color: #fff; 
+
+} 
+ 
+.content-lesson ul { 
+    list-style-type: none; 
+    padding: 0; 
+} 
+ 
+.content-lesson li { 
+    padding: 10px; 
+    border-bottom: 1px solid lightgray; 
 }
 
-.sidebar {
-    width: 300px;
-    border-right: 1px solid lightgray;
-    color: #fff;
-    height: 100vh;
-    position: fixed;
-    top: 1;
-    left: 0;
-    z-index: 999;
-    overflow-y: auto;
-    background-color: #fff;
+.content-lesson a {
+    color: gray;
+    text-decoration: none;
+    transition: background-color 0.5s ease;
+    font-size: 20px;
 }
 
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar li {
-    padding: 10px;
-    border-bottom: 1px solid lightgray;
+.content-lesson li a:hover {
+    background-color: #e9f9e9;
+    color: #000;
 }

@@ -127,10 +127,19 @@ def task(course_name, lesson_name, task_id):
                            , course=course, lessons=lessons, tasks=tasks, task_id=task_id)
 
 
+@app.route('/teach/new')
+@login_required
+def create_course():
+    return render_template('new.html')
+
+
 @app.route('/')
 def main_page():
     return render_template('main.html', title='ГЛАВНАЯ СТРАНИЦА')
 
+@app.route('/teach/new/edit-lesson-theory')
+def edit_lesson_theory():
+    return render_template('edit-lesson-theory.html')
 
 def test():
     user = User()

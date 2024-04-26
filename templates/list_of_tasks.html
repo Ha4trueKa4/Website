@@ -10,10 +10,11 @@
 
 {% block sidebar %}
     <nav class="sidebar">
-        <div class="content-course">
-            <a href="/learn/{{ course.name }}"class="name-course"> {{ course.name }}</a>
-        </div>
+        
         <div class="content-lesson">
+            <div class="content-course">
+                <a href="/learn/{{ course.name }}"class="name-course"> {{ course.name }}</a>
+            </div>
             <ul>
                 {% set i = 1%}
                 {% for lesson in lessons %}

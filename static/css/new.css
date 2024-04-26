@@ -1,0 +1,80 @@
+.create_btn {
+    background-color: #fff;
+    color: black;
+    border: 2px solid green;
+}
+
+.create_btn:hover {
+    background-color: green;
+    color: #fff;
+}
+
+.content-lesson {
+    margin-top: 10px;
+}
+
+.content-lesson .create_btn {
+    margin-left: 5px;
+}
+
+.content-lesson ul {
+    margin-top: 10px;
+}
+
+.new-course-form {
+    background-color: #fff;
+    padding: 15px;
+    margin: 15px;
+    border-radius: 10px;
+}
+
+.new-course-form input{
+    border-radius: 10px;
+    border: lightgreen solid 1px;
+    width: 80%;
+}
+
+.main-form {
+    margin-top: 20px;
+}
+
+.created-lesson {
+        background-color: #fff;
+        padding: 15px;
+        margin: 15px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+}
+
+.edit-btn {
+    border: none;
+    margin-top: 10px;
+    height: 35px;
+    width: 150px;
+}
+
+.delete-btn {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    height: 35px;
+    width: 35px;
+}
+
+.create-lesson {
+    background-color: #fff;
+    padding: 15px;
+    margin: 15px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.create-lesson input {
+    border-radius: 10px;
+    border: lightgreen solid 1px;
+    width: 70%;
+}

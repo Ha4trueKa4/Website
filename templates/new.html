@@ -1,0 +1,48 @@
+
+{% extends "base.html" %}
+
+{% block link %}
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="../static/css/sidebar.css">
+    <link rel="stylesheet" href="../static/css/new.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+{% endblock %}
+
+{% block sidebar %}
+    <nav class="sidebar">
+        <div class="content-lesson">
+            <a href="/teach/new" class="btn btn-success create_btn">+ Новый курс</a>
+            <ul>
+                <li><a href="/courses">Курсы</a></li>
+                <li><a href="/lessons">Уроки</a></li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+            
+    <div class="new-course-form">
+        <h1>Создание нового курса</h1>
+        <form class="main-form">
+            <p>Название курса</p>
+            <input type="text">
+      </form>
+    </div>
+    
+    <div class="created-lesson">
+        <h2>zxc</h2>
+        <div class="created-lesson-right">
+            <button class="edit-btn">Редактировать</button>
+            <button class="delete-btn">X</button>
+        </div>
+    </div>
+    
+    <div class="create-lesson">
+        <input type="text" placeholder="Введите название нового урока">
+        <button class="add-btn btn btn-success">Добавить урок</button>
+    </div>
+    
+            </div>
+{% endblock %}

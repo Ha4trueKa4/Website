@@ -1,10 +1,9 @@
-
 {% extends "base.html" %}
 
 {% block link %}
     <link rel="stylesheet" href="../static/css/header.css">
     <link rel="stylesheet" href="../static/css/sidebar.css">
-    <link rel="stylesheet" href="../static/css/teach.css">
+    <link rel="stylesheet" href="../static/css/new.css">
     <link rel="stylesheet" href="../static/css/main.css">
 {% endblock %}
 
@@ -21,6 +20,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Курсы</h1>
-    <!-- Вот здесь сыктыр нужен цикл со всеми курсами -->
+<div class="main-content">
+    <br>
+    <p>{{ course.name }}</p>
+    <a href="{{ course.name }}/new-lesson" class="btn btn-success create_btn">Добавить урок</a>
+</div>
 {% endblock %}

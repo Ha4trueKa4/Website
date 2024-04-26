@@ -188,6 +188,7 @@ def create_course():
         course.user_id = flask_login.current_user.id
         db_sess.add(course)
         db_sess.commit()
+        return redirect('/teach/my-courses')
     return render_template('new.html', form=form)
 
 
@@ -195,9 +196,20 @@ def create_course():
 def main_page():
     return render_template('main.html', title='ГЛАВНАЯ СТРАНИЦА')
 
-@app.route('/teach/new/edit-lesson-theory')
-def edit_lesson_theory():
-    return render_template('edit-lesson-theory.html')
+@app.route('/teach/my-courses')
+def my_courses():
+    db_sess = db_session.create_session()
+    my_courses = db_sess.query(Course).filter(Course.user_id == flask_login.current_user.id)
+    users = db_sess.query(User).all()
+    return render_template('my_courses.html', my_courses=my_courses, users=users)
+
+@app.route('/teach/<string:course_name>', methods=['GET', 'POST'])
+@login_required
+def edit(course_name):
+    db_sess = db_session.create_session()
+    course = db_sess.query(Course).filter(Course.name == course_name).first()
+    return render_template('edit_course.html', course=course)
+
 
 def test():
     user = User()

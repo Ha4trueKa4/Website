@@ -76,6 +76,7 @@
     if (radio == "{{ task.correct_option }}"){
         document.getElementById("submit_button1").style.display = "inline";
         document.getElementById("submit_button2").style.display = "inline";
+        location.replace("/learn/{{course.name}}/{{lesson.name}}/tasks/{{task.id}}")
     }
 };
 </script>

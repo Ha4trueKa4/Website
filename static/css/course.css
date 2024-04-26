@@ -5,30 +5,11 @@
 }
 
 .content-course {
-    width: 300;
-
     background-color: #222222;
-    position: sticky;
     left: 0;
     top: 1;
     z-index: 998;
-
-}
-
-h3 {
-    color: #fff;
-}
-
-.content-lesson a {
-    color: gray;
-    text-decoration: none;
-    transition: background-color 0.5s ease;
-    font-size: 20px;
-}
-
-.content-lesson a:hover {
-    background-color: #e9f9e9;
-    color: #000;
+    padding: 15px;
 }
 
 .name-course {
@@ -39,10 +20,6 @@ h3 {
 
 .name-course:hover {
     color: #fff;
-}
-
-.content-course {
-    padding: 15px;
 }
 
 .main-content {

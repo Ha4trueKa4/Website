@@ -31,7 +31,6 @@
                 <tr>
                     <th scope="col">Название</th>
                     <th scope="col">Описание</th>
-                    <th scope="col">Кол-во уроков</th>
                     <th scope="col">Создатель</th>
                     <th scope="col">Статус</th>
                 </tr>
@@ -43,9 +42,6 @@
                     </th>
                     <td>
                         {{course.description | safe}}
-                    </td>
-                    <td>
-                        {{course.list_of_lessons.split(', ')|length - 1}} уроков
                     </td>
                     <td>
                         {{users[course.user_id - 1].name}}

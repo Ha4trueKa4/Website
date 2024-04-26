@@ -9,6 +9,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required
 from data.forms.login import LoginForm
 from data.forms.task import TaskForm
 from data.forms.register import RegisterForm
+from data.forms.course import CourseForm\
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Gdagdegdagdagdo'
@@ -145,7 +146,6 @@ def tasks(course_name, lesson_name):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    print(form.validate_on_submit())
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
@@ -176,10 +176,19 @@ def task(course_name, lesson_name, task_id):
                            course=course, lessons=lessons, tasks=tasks, task_id=task_id, db_sess=db_sess, form=form)
 
 
-@app.route('/teach/new')
+@app.route('/teach/new', methods=['GET', 'POST'])
 @login_required
 def create_course():
-    return render_template('new.html')
+    form = CourseForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        course = Course()
+        course.name = form.name.data
+        course.description = form.description.data
+        course.user_id = flask_login.current_user.id
+        db_sess.add(course)
+        db_sess.commit()
+    return render_template('new.html', form=form)
 
 
 @app.route('/')

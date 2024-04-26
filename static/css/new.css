@@ -78,3 +78,12 @@
     border: lightgreen solid 1px;
     width: 70%;
 }
+
+#textarea {
+ display: block;
+ width: 500px;
+ border: solid 2px #e06969;
+ background-color: #fff;
+ min-height: 54px;
+ font-size: 14px;
+}

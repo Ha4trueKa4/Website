@@ -19,7 +19,7 @@
                 {% for lesson in lessons %}
                 <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{loop.index}}. {{ lesson.name }}
                     {% if current_user.id | string() in lesson.completed_by_users%}
-                    ГАЛОЧКА
+                    <i class="fa-solid fa-check"></i>
                     {% endif %}
                 </a></li>
                 {% endfor %}
@@ -33,7 +33,7 @@
     {% if tasks %}
     {% for task in tasks %}
     <div class="main-content-course content-shadow">
-        <h1>{{ task.name }} {% if current_user.id | string() in task.users_passed%}ГАЛОЧКА{% endif %}</h1>
+        <h1>{{ task.name }} {% if current_user.id | string() in task.users_passed%}<i class="fa-solid fa-check"></i>{% endif %}</h1>
         <a href="/learn/{{ course.name }}/{{ lesson.name }}/tasks/{{loop.index}}"> Перейти </a>
         <p>{{j}}</p>
     </div>

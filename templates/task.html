@@ -73,12 +73,9 @@
     function check(){
     var correct = 0;
     var radio = document.querySelector('input[name="answer"]:checked').value;
-    if (radio == {{ task.correct_option }}){
+    if (radio == "{{ task.correct_option }}"){
         document.getElementById("submit_button1").style.display = "inline";
         document.getElementById("submit_button2").style.display = "inline";
-    } else {
-        document.getElementById("submit_button1").style.display = "none";
-        document.getElementById("submit_button2").style.display = "none";
     }
 };
 </script>

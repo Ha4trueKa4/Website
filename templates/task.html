@@ -15,10 +15,12 @@
         </div>
         <div class="content-lesson">
             <ul>
-                {% set i = 1%}
                 {% for lesson in lessons %}
-                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{i}}. {{ lesson.name }}</a></li>
-                {%set i = 1 + i%}
+                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{loop.index}}. {{ lesson.name }}
+                    {% if current_user.id | string() in lesson.completed_by_users%}
+                    ГАЛОЧКА
+                    {% endif %}
+                </a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -33,26 +35,51 @@
     <div class="main-content-course content-shadow">
         <h5>{{ task.name }}</h5>
     </div>
-
+    {% set str_user_id = current_user.id | string() %}
     <div class="main-content-course content-shadow">
         <p>{{ task.question }}<p>
-        <form action="post">
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            {% set correct = 0 %}
             <div>
                 {% for option in task.options.split(', ')%}
                 <div>
-                    <input type="radio" id="{{ option }}" name="answer">
+                    <input type="radio" id="{{ option }}" name="answer" value="{{ option }}">
                     <label for="{{ option }}">{{ option }}</label>
                 </div>
                 {% endfor %}
             </div>
+            {% if str_user_id in task.users_passed %}
+            <!--тут если тест пройден сделай типо зеленым красоту-->
+            <div onclick="check()" method="post" disable=True class="main-content-\course content-shadow press-link">
+                <h2><i class="fa-solid fa-pen-to-square"></i>Проверить</h2>
+            </div>
+            <p id="submit_button2" style="display: none;"> {{ form.submit(type="submit", disable=True, class="btn btn-primary") }} </p>
+            {% else %}
+            <div onclick="check()" method="post" class="main-content-\course content-shadow press-link">
+                <h2><i class="fa-solid fa-pen-to-square"></i>Проверить</h2>
+            </div>
+            <p id="submit_button1" style="display: none;"> {{ form.submit(type="submit", class="btn btn-primary") }} </p>
+            {% endif %}
         </form>
     </div>
-
-    <div>
-        <div onclick="location.href='/learn/{{ course.name }}/{{ lesson.name }}/tasks'" class="main-content-course content-shadow press-link">
-            <h2><i class="fa-solid fa-pen-to-square"></i>Ответить</h2>
-        </div>
+    {% if str_user_id in task.users_passed %}
+    <div class="main-content-course content-shadow">
+        <h5>ТЕст пройден</h5>
     </div>
-
+    {% endif %}
 </div>
+<script>
+    function check(){
+    var correct = 0;
+    var radio = document.querySelector('input[name="answer"]:checked').value;
+    if (radio == {{ task.correct_option }}){
+        document.getElementById("submit_button1").style.display = "inline";
+        document.getElementById("submit_button2").style.display = "inline";
+    } else {
+        document.getElementById("submit_button1").style.display = "none";
+        document.getElementById("submit_button2").style.display = "none";
+    }
+};
+</script>
 {% endblock %}

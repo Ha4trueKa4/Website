@@ -15,10 +15,12 @@
         </div>
         <div class="content-lesson">
             <ul>
-                {% set i = 1%}
                 {% for lesson in lessons %}
-                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{i}}. {{ lesson.name }}</a></li>
-                {%set i = 1 + i%}
+                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{loop.index}}. {{ lesson.name }}
+                    {% if current_user.id | string() in lesson.completed_by_users%}
+                    ГАЛОЧКА
+                    {% endif %}
+                </a></li>
                 {% endfor %}
             </ul>
         </div>

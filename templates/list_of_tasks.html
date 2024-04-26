@@ -15,10 +15,12 @@
         </div>
         <div class="content-lesson">
             <ul>
-                {% set i = 1%}
                 {% for lesson in lessons %}
-                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{i}}. {{ lesson.name }}</a></li>
-                {%set i = 1 + i%}
+                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{loop.index}}. {{ lesson.name }}
+                    {% if current_user.id | string() in lesson.completed_by_users%}
+                    ГАЛОЧКА
+                    {% endif %}
+                </a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -27,13 +29,18 @@
 {% block content %}
 
 <div class="main-content">
-    {% set i = 1%}
-    {% for task in tasks%}
+    {% if tasks %}
+    {% for task in tasks %}
     <div class="main-content-course content-shadow">
-        <h1>{{ task.name }}</h1>
-        <a href="/learn/{{ course.name }}/{{ lesson.name }}/tasks/{{i}}"> Перейти </a>
+        <h1>{{ task.name }} {% if current_user.id | string() in task.users_passed%}ГАЛОЧКА{% endif %}</h1>
+        <a href="/learn/{{ course.name }}/{{ lesson.name }}/tasks/{{loop.index}}"> Перейти </a>
+        <p>{{j}}</p>
     </div>
-    {%set i = 1 + i%}
     {% endfor %}
+    {% else %}
+    <div class="main-content-course content-shadow">
+        <h1>Заданий ещё нет</h1>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

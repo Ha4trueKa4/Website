@@ -3,7 +3,7 @@
 {% block link %}
     <link rel="stylesheet" href="../static/css/header.css">
     <link rel="stylesheet" href="../static/css/sidebar.css">
-    <link rel="stylesheet" href="../static/css/new.css">
+    <link rel="stylesheet" href="../static/css/my-course.css">
     <link rel="stylesheet" href="../static/css/main.css">
 {% endblock %}
 
@@ -22,49 +22,44 @@
 {% block content %}
 <div class="main-content">
     {% if my_courses %}
-  {% for course in my_courses%}
-  <table>
-    <caption>
-      Курс {{course.id}}
-    </caption>
-    <thead>
-    <tr>
-      <th scope="col">Название</th>
-      <th scope="col">Описание</th>
-      <th scope="col">Создатель</th>
-      <th scope="col">Статус</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <th scope="row">
-        {{course.title}}
-      </th>
-      <td>
-        {{course.description | safe}}
-      </td>
-      <td>
-        {{users[course.user_id - 1].name}}
-      </td>
-      <td>
-        {% if current_user.is_authenticated %}
-        {%if course.id | string() in current_user.completed_courses%}
-        Пройден
-        {%else%}
-        Не пройден
-        {%endif%}
-        {%else%}
-        Войдите в аккаунт чтобы узнать статус
-        {%endif%}
-      </td>
-    </tr>
-
-    </tbody>
-  </table>
-  <a href="/teach/{{ course.name }}">Редактировать</a>
-  {% endfor %}
-  {% else %}
-  <h1>Курсов ещё нет</h1>
-  {% endif %}
+        {% for course in my_courses %}
+            <div class="course">
+                <h2>Курс {{course.id}}</h2>
+                <table>
+                    <caption>Курс {{course.id}}</caption>
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Описание</th>
+                            <th>Создатель</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{course.title}}</td>
+                            <td>{{course.description | safe}}</td>
+                            <td>{{users[course.user_id - 1].name}}</td>
+                            <td>
+                                {% if current_user.is_authenticated %}
+                                    {% if course.id|string() in current_user.completed_courses %}
+                                        <span class="status-icon completed">✔</span>
+                                    {% else %}
+                                        <span class="status-icon not-completed">✘</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="status-icon">🔒</span>
+                                    <span>Войдите в аккаунт, чтобы узнать статус</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="/teach/{{ course.name }}" class="btn-edit">Редактировать</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h1>Курсов ещё нет</h1>
+    {% endif %}
 </div>
 {% endblock %}

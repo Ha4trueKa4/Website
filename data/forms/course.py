@@ -5,5 +5,5 @@ from wtforms.validators import DataRequired
 
 class CourseForm(FlaskForm):
     name = EmailField('Название курса', validators=[DataRequired()])
-    description = StringField('Описание курса', validators=[DataRequired()])
+    description = StringField('Описание курса', validators=[DataRequired(), ])
     submit = SubmitField('Добавить')

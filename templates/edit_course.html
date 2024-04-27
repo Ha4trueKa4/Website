@@ -3,7 +3,7 @@
 {% block link %}
     <link rel="stylesheet" href="../static/css/header.css">
     <link rel="stylesheet" href="../static/css/sidebar.css">
-    <link rel="stylesheet" href="../static/css/new.css">
+    <link rel="stylesheet" href="../static/css/edit-course.css">
     <link rel="stylesheet" href="../static/css/main.css">
 {% endblock %}
 
@@ -22,7 +22,26 @@
 {% block content %}
 <div class="main-content">
     <br>
-    <p>{{ course.name }}</p>
-    <a href="{{ course.name }}/new-lesson" class="btn btn-success create_btn">Добавить урок</a>
+    <h1>{{ course.name }}</h1>
+    {% for lesson in lessons %}
+        <div class="created-task">
+            <h2>{{ lesson.name }}</h2>
+            <div>
+                <button class="edit-btn"><a href="/teach/{{ course.name }}/edit_theory/{{ lesson.id_in_course }}">Редактировать</a></button>
+                <button class="delete-btn"><a href="/teach/{{ course.name }}/delete/{{ lesson.id_in_course }}">X</a></button>
+            </div>
+        </div>
+    {% endfor %}
+
+    <form class="create-task" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.name(class="form-input", type="text", placeholder="Введите название урока") }}
+        {% for error in form.name.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+            <p>{{ form.submit(type="submit", class="btn btn-primary submit-btn") }}</p>
+    </form>
 </div>
 {% endblock %}

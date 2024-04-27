@@ -1,0 +1,37 @@
+
+{% extends "base.html" %}
+
+{% block link %}
+    <link rel="stylesheet" href="../../static/css/header.css">
+    <link rel="stylesheet" href="../../static/css/sidebar.css">
+    <link rel="stylesheet" href="../../static/css/edit-lesson-theory.css">
+    <link rel="stylesheet" href="../../static/css/main.css">
+{% endblock %}
+
+{% block sidebar %}
+    <nav class="sidebar">
+        <div class="content-lesson">
+            <a href="/teach/new" class="btn btn-success create_btn">+ Новый курс</a>
+            <ul>
+                <li><a href="/courses">Курсы</a></li>
+                <li><a href="/lessons">Уроки</a></li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="edit-form">
+        <h1>Настройки урока</h1>
+        <input type="text" value="название урока"><!-- сюда название урока вставить-->
+        <h2>Редактирование теории урока</h2>
+        <textarea id="textarea" placeholder="Введите текст..."></textarea>
+    </div>
+    </div>
+<script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://snipp.ru/cdn/autosize/dist/autosize.min.js"></script>
+<script>
+autosize($('#textarea'));
+</script>
+{% endblock %} 

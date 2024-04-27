@@ -9,7 +9,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required
 from data.forms.login import LoginForm
 from data.forms.task import TaskForm
 from data.forms.register import RegisterForm
-from data.forms.course import CourseForm\
+from data.forms.course import CourseForm
+from data.forms.lesson import LessonForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Gdagdegdagdagdo'
@@ -154,6 +155,7 @@ def login():
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
+
 @app.route('/learn/<string:course_name>/<int:lesson_id_in_course>/tasks/<int:task_id>', methods=['GET', 'POST'])
 @login_required
 def task(course_name, lesson_id_in_course, task_id):
@@ -218,6 +220,7 @@ def create_course():
 def main_page():
     return render_template('main.html', title='ГЛАВНАЯ СТРАНИЦА')
 
+
 @app.route('/teach/my-courses')
 @login_required
 def my_courses():
@@ -226,24 +229,42 @@ def my_courses():
     users = db_sess.query(User).all()
     return render_template('my_courses.html', my_courses=my_courses, users=users)
 
+
 @app.route('/teach/<string:course_name>', methods=['GET', 'POST'])
 @login_required
 def edit(course_name):
+    form = LessonForm()
     db_sess = db_session.create_session()
     course = db_sess.query(Course).filter(Course.name == course_name).first()
-    return render_template('edit_course.html', course=course)
+    lessons = db_sess.query(Lesson).filter(Lesson.course_id == course.id).all()
+    if form.validate_on_submit():
+        if not(db_sess.query(Lesson).filter(Lesson.name == form.name.data).all()):
+            lesson = Lesson()
+            lesson.name = form.name.data
+            lesson.course_id = course.id
+            lesson.id_in_course = len(lessons) + 1
+            db_sess.add(lesson)
+            db_sess.commit()
+            return redirect(f'/teach/{course_name}')
+    lessons = db_sess.query(Lesson).filter(Lesson.course_id == course.id).all()
+    return render_template('edit_course.html', course=course, lessons=lessons, form=form)
 
 
-def test():
-    user = User()
-    user.name = "DEAN"
-    user.email = 'k@gmail.com'
-    user.set_password('12345')
-    user.completed_courses = ' '
+@app.route('/teach/<string:course_name>/edit_theory/<int:id_lesson>')
+def edit_theory(course_name, id_lesson):
+    return render_template('edit-lesson-theory.html')
+
+
+@app.route('/teach/<string:course_name>/delete/<int:id_lesson>', methods=['GET', 'POST'])
+def delete_lesson(course_name, id_lesson):
     db_sess = db_session.create_session()
-    db_sess.add(user)
-    db_sess.commit()
-
+    course = db_sess.query(Course).filter(Course.name == course_name).first()
+    print(course.id)
+    lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).all()
+    if lesson:
+        db_sess.delete(lesson)
+        db_sess.commit()
+    return redirect(f'/teach/{course_name}')
 
 def main():
     db_session.global_init("db/database.db")

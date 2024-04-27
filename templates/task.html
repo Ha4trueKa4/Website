@@ -34,7 +34,7 @@
         <h5>{{ task.name }}</h5>
     </div>
     <div class="main-content-course content-shadow">
-        <p>{{ task.question }}<p>
+        <p>{{ task.question | replace("|", "<br/>") | safe }}<p>
         <form action="" method="post" id="radio-form">
             {{ form.hidden_tag() }}
             {% set correct = 0 %}

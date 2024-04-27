@@ -1,6 +1,6 @@
 import flask_login
 from flask import Flask, redirect, render_template, jsonify, make_response
-from data import db_session
+from data import db_session, courses_api
 from data.users import User
 from data.courses import Course
 from data.lessons import Lesson
@@ -11,6 +11,10 @@ from data.forms.task import TaskForm
 from data.forms.register import RegisterForm
 from data.forms.course import CourseForm
 from data.forms.lesson import LessonForm
+from data.forms.course import CourseForm
+from requests import post, get
+import os
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Gdagdegdagdagdo'
@@ -266,10 +270,26 @@ def delete_lesson(course_name, id_lesson):
         db_sess.commit()
     return redirect(f'/teach/{course_name}')
 
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
+
+
 def main():
     db_session.global_init("db/database.db")
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.register_blueprint(courses_api.blueprint)
+    app.run(host='0.0.0.0', port=port)
+
 
 
 if __name__ == '__main__':
     main()
+
+
+

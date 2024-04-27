@@ -9,63 +9,57 @@
 {% block sidebar %}
 <nav class="sidebar">
     <div class="content-lesson">
-            <ul>
-                <li><a href="/lesson">Главная</a></li>
-                <li><a href="/lesson">Совместные проекты</a></li>
-                <li><a href="/lesson">Вопросы</a></li>
-            </ul>
+        <ul>
+            <li><a href="/lesson">Главная</a></li>
+            <li><a href="/lesson">Совместные проекты</a></li>
+            <li><a href="/lesson">Вопросы</a></li>
+        </ul>
     </div>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="main-content">
-    <form action="" method="post">
+    <div class="courses">
         {% if courses %}
-        {% for course in courses %}
-        <table>
-            <caption>
-                Курс {{course.id}}
-              </caption>
-            <thead>
-                <tr>
-                    <th scope="col">Название</th>
-                    <th scope="col">Описание</th>
-                    <th scope="col">Создатель</th>
-                    <th scope="col">Статус</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">
-                        {{course.title}}
-                    </th>
-                    <td>
-                        {{course.description | safe}}
-                    </td>
-                    <td>
-                        {{users[course.user_id - 1].name}}
-                    </td>
-                    <td>
-                        {% if current_user.is_authenticated %}
-                        {%if course.id | string() in current_user.completed_courses%}
-                        Пройден
-                        {%else%}
-                        Не пройден
-                        {%endif%}
-                        {%else%}
-                        Войдите в аккаунт чтобы узнать статус
-                        {%endif%}
-                    </td>
-                </tr>
-    
-            </tbody>
-        </table>
-        <a href="learn/{{ course.name }}">Пройти</a>
-        {% endfor %}
+            {% for course in courses %}
+            <div class="course">
+                <h2>Курс {{course.id}}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Описание</th>
+                            <th>Создатель</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{course.title}}</td>
+                            <td>{{course.description | safe}}</td>
+                            <td>{{users[course.user_id - 1].name}}</td>
+                            <td>
+                                {% if current_user.is_authenticated %}
+                                    {% if course.id|string() in current_user.completed_courses %}
+                                        <span class="status-icon completed">✔</span>
+                                    {% else %}
+                                        <span class="status-icon not-completed">✘</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="status-icon">🔒</span>
+                                    <span>Войдите в аккаунт, чтобы узнать статус</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="learn/{{ course.name }}" class="btn-learn">Пройти</a>
+            </div>
+            {% endfor %}
         {% else %}
-        <h1>Курсов ещё нет</h1>
+            <h1>Курсов ещё нет</h1>
         {% endif %}
-    </form>
+    </div>
 </div>
 {% endblock %}

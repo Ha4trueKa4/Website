@@ -16,7 +16,7 @@
         <div class="content-lesson">
             <ul>
                 {% for lesson in lessons %}
-                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{loop.index}}. {{ lesson.name }}
+                <li><a href="/learn/{{ course.name }}/{{ loop.index }}">{{loop.index}}. {{ lesson.name }}
                     {% if current_user.id | string() in lesson.completed_by_users%}
                     <i class="fa-solid fa-check"></i>
                     {% endif %}
@@ -26,21 +26,33 @@
         </div>
     </nav>
 {% endblock %}
-
 {% block content %}
+{% set str_user_id = current_user.id | string() %}
 
-{% set task = tasks[task_id - 1]%}
-
-<div class="main-content">
+<div class="main-content" id="mc" style="{% if str_user_id in task.users_passed %}background-color: green;{% endif %}" >
     <div class="main-content-course content-shadow">
         <h5>{{ task.name }}</h5>
     </div>
-    {% set str_user_id = current_user.id | string() %}
     <div class="main-content-course content-shadow">
         <p>{{ task.question }}<p>
-        <form action="" method="post">
+        <form action="" method="post" id="radio-form">
             {{ form.hidden_tag() }}
             {% set correct = 0 %}
+            {% if str_user_id in task.users_passed %}
+
+            <div>
+                {% for option in task.options.split(', ')%}
+                <div>
+                    {% if option == task.correct_option %}
+                    <input type="radio" id="{{ option }}-done-correct" checked disabled name="answer" value="{{ option }}">
+                    {% else %}
+                    <input type="radio" id="{{ option }}-done" disabled name="answer" value="{{ option }}">
+                    {% endif %}
+                    <label for="{{ option }}">{{ option }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
             <div>
                 {% for option in task.options.split(', ')%}
                 <div>
@@ -49,12 +61,11 @@
                 </div>
                 {% endfor %}
             </div>
+            {% endif %}
             {% if str_user_id in task.users_passed %}
+
             <!--тут если тест пройден сделай типо зеленым красоту-->
-            <div onclick="check()" method="post" disable=True class="main-content-\course content-shadow press-link">
-                <h2><i class="fa-solid fa-pen-to-square"></i>Проверить</h2>
-            </div>
-            <p id="submit_button2" style="display: none;"> {{ form.submit(type="submit", disable=True, class="btn btn-primary") }} </p>
+
             {% else %}
             <div onclick="check()" method="post" class="main-content-\course content-shadow press-link">
                 <h2><i class="fa-solid fa-pen-to-square"></i>Проверить</h2>
@@ -65,8 +76,23 @@
     </div>
     {% if str_user_id in task.users_passed %}
     <div class="main-content-course content-shadow">
-        <h5>ТЕст пройден</h5>
+        <h5>Выполнено <i class="fa-solid fa-check"></i></h5>
     </div>
+    {% if tasks | length() - task_id > 0 %}
+    <div class="main-content-course content-shadow">
+        <a href="/learn/{{ course.name }}/{{ lesson.id_in_course }}/tasks/{{ task_id + 1}}">Следующее задание</a>
+    </div>
+    {% else %}
+    {% if next_lesson %}
+    <div class="main-content-course content-shadow">
+        <a href="/learn/{{ course.name }}/{{ next_lesson.id_in_course }}">К следующему уроку {{ next_lesson.id_in_course }}</a>
+    </div>
+    {% else %}
+    <div class="main-content-course content-shadow">
+        <a href="/learn/{{ course.name }}">К странице курса</a>
+    </div>
+    {% endif %}
+    {% endif %}
     {% endif %}
 </div>
 <script>
@@ -75,8 +101,10 @@
     var radio = document.querySelector('input[name="answer"]:checked').value;
     if (radio == "{{ task.correct_option }}"){
         document.getElementById("submit_button1").style.display = "inline";
-        document.getElementById("submit_button2").style.display = "inline";
-        location.replace("/learn/{{course.name}}/{{lesson.name}}/tasks/{{task.id}}")
+        document.getElementById("mc").style.backgroundColor = "green";
+    } else {
+        document.getElementById("mc").style.backgroundColor = "red";
+        document.getElementById("submit_button1").style.display = "none";
     }
 };
 </script>

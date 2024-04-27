@@ -10,14 +10,13 @@
 
 {% block sidebar %}
     <nav class="sidebar">
-        
+        <div class="content-course">
+            <a href="/learn/{{ course.name }}"class="name-course"> {{ course.name }}</a>
+        </div>
         <div class="content-lesson">
-            <div class="content-course">
-                <a href="/learn/{{ course.name }}"class="name-course"> {{ course.name }}</a>
-            </div>
             <ul>
                 {% for lesson in lessons %}
-                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{loop.index}}. {{ lesson.name }}
+                <li><a href="/learn/{{ course.name }}/{{ loop.index }}">{{loop.index}}. {{ lesson.name }}
                     {% if current_user.id | string() in lesson.completed_by_users%}
                     <i class="fa-solid fa-check"></i>
                     {% endif %}
@@ -34,7 +33,7 @@
     {% for task in tasks %}
     <div class="main-content-course content-shadow">
         <h1>{{ task.name }} {% if current_user.id | string() in task.users_passed%}<i class="fa-solid fa-check"></i>{% endif %}</h1>
-        <a href="/learn/{{ course.name }}/{{ lesson.name }}/tasks/{{loop.index}}"> Перейти </a>
+        <a href="/learn/{{ course.name }}/{{ lesson.id_in_course }}/tasks/{{loop.index}}"> Перейти </a>
         <p>{{j}}</p>
     </div>
     {% endfor %}

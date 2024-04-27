@@ -16,7 +16,7 @@
         <div class="content-lesson">
             <ul>
                 {% for lesson in lessons %}
-                <li><a href="/learn/{{ course.name }}/{{ lesson.name }}">{{loop.index}}. {{ lesson.name }}
+                <li><a href="/learn/{{ course.name }}/{{ loop.index }}">{{loop.index}}. {{ lesson.name }}
                     {% if current_user.id | string() in lesson.completed_by_users%}
                     <i class="fa-solid fa-check"></i>
                     {% endif %}
@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<div onclick="location.href='/learn/{{ course.name }}/{{ lesson.name }}/tasks'" class="main-content-course content-shadow press-link">
+<div onclick="location.href='/learn/{{ course.name }}/{{ lesson.id_in_course }}/tasks'" class="main-content-course content-shadow press-link">
     <h2><i class="fa-solid fa-pen-to-square"></i> Перейти к заданиям</h2>
 </div>
 {% endblock %}

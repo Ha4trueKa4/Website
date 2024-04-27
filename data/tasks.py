@@ -15,7 +15,8 @@ class Task(SqlAlchemyBase, UserMixin, SerializerMixin):
     correct_option = sqlalchemy.Column(sqlalchemy.String)
     options = sqlalchemy.Column(sqlalchemy.String)
     lesson_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("lessons.id"))
-    users_passed = sqlalchemy.Column(sqlalchemy.String)
+    users_passed = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    id_in_lesson = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
 
 
     lesson = orm.relationship("Lesson")

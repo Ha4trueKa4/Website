@@ -45,6 +45,14 @@ def register():
 def teach():
     return render_template('teach.html')
 
+@app.route('/learn/questions')
+def questions():
+    return render_template('questions.html')
+
+@app.route('/learn/co-projects')
+def co_projects():
+    return render_template('co-projects.html')
+
 
 @app.route('/learn', methods=['GET'])
 def learn():
@@ -259,15 +267,21 @@ def edit_theory(course_name, id_lesson):
     return render_template('edit-lesson-theory.html')
 
 
-@app.route('/teach/<string:course_name>/delete/<int:id_lesson>', methods=['GET', 'POST'])
+@app.route('/teach/<string:course_name>/delete/<int:id_lesson>', methods=['POST', "GET"])
 def delete_lesson(course_name, id_lesson):
     db_sess = db_session.create_session()
     course = db_sess.query(Course).filter(Course.name == course_name).first()
-    print(course.id)
     lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).all()
+    lsn = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).first()
+    tasks = db_sess.query(Task).filter(Task.lesson_id == lsn.id).all()
+    if tasks:
+        for task in tasks:
+            db_sess.delete(task)
+            db_sess.commit()
     if lesson:
-        db_sess.delete(lesson)
-        db_sess.commit()
+        for ls in lesson:
+            db_sess.delete(ls)
+            db_sess.commit()
     return redirect(f'/teach/{course_name}')
 
 @app.errorhandler(404)

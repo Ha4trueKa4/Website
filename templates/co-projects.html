@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block link %}
+    <link rel="stylesheet" href="../static/css/header.css">
+    <link rel="stylesheet" href="../static/css/sidebar.css">
+    <link rel="stylesheet" href="../static/css/list_of_courses.css">
+{% endblock %}
+
+{% block sidebar %}
+<nav class="sidebar">
+    <div class="content-lesson">
+        <ul>
+            <li><a href="/learn">Главная</a></li>
+            <li><a href="/learn/co-projects">Совместные проекты</a></li>
+            <li><a href="/learn/questions">Вопросы</a></li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1>В разработке</h1>
+</div>
+{% endblock %}

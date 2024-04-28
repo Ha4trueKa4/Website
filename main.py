@@ -44,6 +44,14 @@ def register():
 def teach():
     return render_template('teach.html')
 
+@app.route('/learn/questions')
+def questions():
+    return render_template('questions.html')
+
+@app.route('/learn/co-projects')
+def co_projects():
+    return render_template('co-projects.html')
+
 
 @app.route('/learn', methods=['GET'])
 def learn():
@@ -74,19 +82,21 @@ def course(course_name):
     course, lesson, lessons = get_data(course_name, None)
     is_course_completed = True
     for lsn in lessons:
-        print(str(flask_login.current_user.id))
-        if lsn.completed_by_users is not None:
-            if str(flask_login.current_user.id) not in lsn.completed_by_users:
-                is_course_completed = False
+        if str(flask_login.current_user.id) not in lsn.completed_by_users:
+            is_course_completed = False
 
     db_session.global_init('database.db')
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.id == flask_login.current_user.id).first()
     if is_course_completed:
-        if str(course.id) not in user.completed_courses:
-            user.completed_courses += f'{course.id}'
+        user.completed_courses += f'{course.id}'
     else:
-        user.completed_courses = user.completed_courses.replace(f'{course.id}', '')
+        user.completed_courses.replace(f'{course.id}', '')
+        tmp = list(user.completed_courses).copy()
+        for i in tmp:
+            if i == str(course.id):
+                tmp.remove(i)
+        user.completed_courses = ''.join(tmp)
     db_sess.commit()
 
     return render_template('course.html', course=course, lessons=lessons)
@@ -287,15 +297,21 @@ def edit_task(course_name, id_lesson):
     tasks = db_sess.query(Task).filter(Task.lesson_id == lesson.id).all()
     return render_template('edit-lesson-task.html', course=course, lesson=lesson, tasks=tasks, form=form)
 
-@app.route('/teach/<string:course_name>/delete/<int:id_lesson>', methods=['GET', 'POST'])
+@app.route('/teach/<string:course_name>/delete/<int:id_lesson>', methods=['POST', "GET"])
 def delete_lesson(course_name, id_lesson):
     db_sess = db_session.create_session()
     course = db_sess.query(Course).filter(Course.name == course_name).first()
-    print(course.id)
     lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).all()
+    lsn = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).first()
+    tasks = db_sess.query(Task).filter(Task.lesson_id == lsn.id).all()
+    if tasks:
+        for task in tasks:
+            db_sess.delete(task)
+            db_sess.commit()
     if lesson:
-        db_sess.delete(lesson)
-        db_sess.commit()
+        for ls in lesson:
+            db_sess.delete(ls)
+            db_sess.commit()
     return redirect(f'/teach/{course_name}')
 
 @app.errorhandler(404)

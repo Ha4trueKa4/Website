@@ -31,7 +31,7 @@
         {{ form.theory_title(type="text", class="form-input", value=lesson.theory_title)}}
         <!-- <input type="text" value="название урока">сюда название урока вставить -->
         <h2>Редактирование теории урока</h2>
-        <textarea id="textarea" name="theory">{{ lesson.theory }}</textarea><br>
+        <textarea id="textarea" name="theory">{{ lesson.theory | replace("|", "") | safe }}</textarea><br>
         {{ form.submit(type="submit", class="btn btn-primary submit-btn") }}
         <!-- <textarea id="textarea" placeholder="Введите текст..."></textarea> -->
     </form>

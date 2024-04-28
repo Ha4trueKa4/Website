@@ -54,7 +54,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="/teach/{{ course.name }}" class="btn-edit">Редактировать</a>
+                <a href="/teach/{{ course.name }}" class="btn btn-edit">Редактировать</a>
+                <a href="/teach/my-courses/delete/{{ course.name }}" class="btn btn-danger">Удалить</a>
             </div>
         {% endfor %}
     {% else %}

@@ -75,3 +75,6 @@ th {
 .btn-edit:hover {
     background-color: #0056b3;
 }
+.btn-danger {
+    padding: 8px 16px;
+}

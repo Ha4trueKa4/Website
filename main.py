@@ -116,7 +116,7 @@ def get_data(course_name, lesson_id_in_course):
     if course_name:
         course = db_sess.query(Course).filter(Course.name == course_name).first()
     if lesson_id_in_course:
-        lesson = db_sess.query(Lesson).filter(Lesson.id_in_course == lesson_id_in_course and Lesson.course_id == course.id).first()
+        lesson = db_sess.query(Lesson).filter(Lesson.id_in_course == lesson_id_in_course, Lesson.course_id == course.id).first()
 
     lessons = db_sess.query(Lesson).filter(Lesson.course_id == course.id).all()
     return course, lesson, lessons
@@ -179,7 +179,7 @@ def task(course_name, lesson_id_in_course, task_id):
     next_lesson = db_sess.query(Lesson).filter(Lesson.id_in_course == next_id, course.id == Lesson.course_id).first()
     tasks = db_sess.query(Task).filter(Task.lesson_id == lesson.id).all()
     form = TaskForm()
-    lesson = db_sess.query(Lesson).filter(Lesson.id_in_course == lesson_id_in_course).first()
+    lesson = db_sess.query(Lesson).filter(Lesson.id_in_course == lesson_id_in_course, Lesson.course_id == course.id).first()
     task = db_sess.query(Task).filter(Task.id_in_lesson == task_id, lesson.id == Task.lesson_id).first()
     if form.validate_on_submit():
         user_passed = task.users_passed
@@ -272,6 +272,8 @@ def edit_theory(course_name, id_lesson):
         lesson.name = form.name.data
         lesson.theory_title = form.theory_title.data
         lesson.theory = request.form.get('theory')
+        lesson.theory = lesson.theory.replace('\n', '|')
+
         db_sess.commit()
         return redirect(f'/teach/{course_name}/edit_theory/{id_lesson}')
     return render_template('edit-lesson-theory.html', form=form, lesson=lesson, course=course)
@@ -313,6 +315,25 @@ def delete_lesson(course_name, id_lesson):
             db_sess.delete(ls)
             db_sess.commit()
     return redirect(f'/teach/{course_name}')
+
+
+
+@app.route('/teach/my-courses/delete/<string:course_name>', methods=['POST', "GET"])
+def delete_course(course_name):
+    db_sess = db_session.create_session()
+    course = db_sess.query(Course).filter(Course.name == course_name).first()
+    lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id).all()
+    for lsn in lesson:
+        tasks = db_sess.query(Task).filter(Task.lesson_id == lsn.id).all()
+        if tasks:
+            for task in tasks:
+                db_sess.delete(task)
+                db_sess.commit()
+        db_sess.delete(lsn)
+        db_sess.commit()
+    db_sess.delete(course)
+    db_sess.commit()
+    return redirect(f'/teach/my-courses')
 
 @app.errorhandler(404)
 def not_found(error):

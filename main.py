@@ -288,6 +288,7 @@ def edit_list_tasks(course_name, id_lesson):
     course = db_sess.query(Course).filter(Course.name == course_name).first()
     lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).first()
     tasks = db_sess.query(Task).filter(Task.lesson_id == lesson.id).all()
+    print(form.validate_on_submit())
     if form.validate_on_submit():
         if not(db_sess.query(Task).filter(Task.name == form.name.data).all()):
             task = Task()
@@ -325,6 +326,17 @@ def edit_task(course_name, id_lesson, id_task):
     course = db_sess.query(Course).filter(Course.name == course_name).first()
     lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).first()
     task = db_sess.query(Task).filter(Task.lesson_id == lesson.id, Task.id_in_lesson == id_task).first()
+    print(form.validate_on_submit())
+    if form.validate_on_submit():
+        t1 = form.text_task1.data
+        t2 = form.text_task1.data
+        t3 = form.text_task1.data
+        t4 = form.text_task1.data
+        options = ', '.join([t1, t2, t3, t4])
+        print(options)
+        task.correct_option = [t1, t2, t3, t4][form.radio_task1.data]
+        print(task.correct_option)
+        return redirect(f'/teach/{course_name}')
     return render_template('create-task.html', course=course, lesson=lesson, task=task ,form=form)
 
 

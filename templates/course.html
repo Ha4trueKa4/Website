@@ -30,10 +30,13 @@
 {% block content %}
 <div class="main-content">
     <div class="name-of-course">
-        <h1></h1>
+        <h1>{{ course.name }}</h1>
     </div>
     <div class="description">
-        <h2></h2>
+        <h2>{{ course.description }}</h2>
+    </div>
+    <div class="creator">
+        <h2>{{users[course.user_id - 1].name}}</h2>
     </div>
 </div>
 {% endblock %}

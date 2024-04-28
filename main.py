@@ -81,12 +81,14 @@ def logout():
 def course(course_name):
     course, lesson, lessons = get_data(course_name, None)
     is_course_completed = True
+
     for lsn in lessons:
         if str(flask_login.current_user.id) not in lsn.completed_by_users:
             is_course_completed = False
 
     db_session.global_init('database.db')
     db_sess = db_session.create_session()
+    users = db_sess.query(User).all()
     user = db_sess.query(User).filter(User.id == flask_login.current_user.id).first()
     if is_course_completed:
         user.completed_courses += f'{course.id}'
@@ -99,7 +101,7 @@ def course(course_name):
         user.completed_courses = ''.join(tmp)
     db_sess.commit()
 
-    return render_template('course.html', course=course, lessons=lessons)
+    return render_template('course.html', course=course, lessons=lessons, users=users)
 
 
 

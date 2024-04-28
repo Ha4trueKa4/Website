@@ -7,7 +7,7 @@ from data.lessons import Lesson
 from data.tasks import Task
 from flask_login import LoginManager, login_user, logout_user, login_required
 from data.forms.login import LoginForm
-from data.forms.task import TaskForm
+from data.forms.task import TaskForm, UpdateTaskForm
 from data.forms.register import RegisterForm
 from data.forms.course import CourseForm
 from data.forms.lesson import LessonForm, TheoryForm, CreateTaskForm
@@ -81,7 +81,6 @@ def logout():
 def course(course_name):
     course, lesson, lessons = get_data(course_name, None)
     is_course_completed = True
-
     for lsn in lessons:
         if str(flask_login.current_user.id) not in lsn.completed_by_users:
             is_course_completed = False
@@ -283,7 +282,7 @@ def edit_theory(course_name, id_lesson):
 
 @app.route('/teach/<string:course_name>/edit_tasks/<int:id_lesson>', methods=['GET', 'POST'])
 @login_required
-def edit_task(course_name, id_lesson):
+def edit_list_tasks(course_name, id_lesson):
     form = CreateTaskForm()
     db_sess = db_session.create_session()
     course = db_sess.query(Course).filter(Course.name == course_name).first()
@@ -317,6 +316,16 @@ def delete_lesson(course_name, id_lesson):
             db_sess.delete(ls)
             db_sess.commit()
     return redirect(f'/teach/{course_name}')
+
+
+@app.route('/teach/<string:course_name>/edit_tasks/<int:id_lesson>/<int:id_task>/edit')
+def edit_task(course_name, id_lesson, id_task):
+    form = UpdateTaskForm()
+    db_sess = db_session.create_session()
+    course = db_sess.query(Course).filter(Course.name == course_name).first()
+    lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).first()
+    task = db_sess.query(Task).filter(Task.lesson_id == lesson.id, Task.id_in_lesson == id_task).first()
+    return render_template('create-task.html', course=course, lesson=lesson, task=task ,form=form)
 
 
 

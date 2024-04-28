@@ -1,0 +1,75 @@
+
+{% extends "base.html" %}
+
+{% block link %}
+    <link rel="stylesheet" href="../../../../../static/css/header.css">
+    <link rel="stylesheet" href="../../../../../static/css/sidebar.css">
+    <link rel="stylesheet" href="../../../../../static/css/edit-lesson-theory.css">
+    <link rel="stylesheet" href="../../../../../static/css/main.css">
+    <link rel="stylesheet" href="../../../../../static/css/create-task.css">
+{% endblock %}
+
+{% block sidebar %}
+    <nav class="sidebar">
+        <div class="content-lesson">
+            <a href="/teach/new" class="btn btn-success create_btn">+ Новый курс</a>
+            <ul>
+                <li><a href="/teach/{{ course.name }}">К курсу</a></li>
+                <li><a href="/teach/{{ course.name }}/edit_theory/{{ lesson.id_in_course }}">Теория</a></li>
+                <li><a href="/teach/{{ course.name }}/edit_tasks/{{ lesson.id_in_course }}">Задания</a></li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+{% block content %}
+<div class="main-content">
+    <form action="/edit_task" method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.name_task.label }}<br>
+        {{ form.name_task(type="text", id="task_name")}}<br><br>
+        <!-- <label for="task_name">Название задания:</label><br>
+        <input type="text" id="task_name" name="task_name"><br><br> -->
+        
+        {{ form.text_task.label }}<br>
+        {{ form.text_task(id="task_description", rows="4", cols="50")}}<br><br>
+
+        
+        {{ form.text_task1.label }}<br>
+        {{ form.text_task1(id="option1", type="text")}}<br><br>
+
+
+        {{ form.radio_task1(type="radio", id="option1_radio")}}
+        {{ form.radio_task1.label}}<br><br>
+        
+        {{ form.text_task2.label }}<br>
+        {{ form.text_task2(id="option2", type="text")}}<br><br>
+
+
+        {{ form.radio_task2(type="radio", id="option2_radio")}}
+        {{ form.radio_task2.label}}<br><br>
+
+        
+        {{ form.text_task3.label }}<br>
+        {{ form.text_task3(id="option3", type="text")}}<br><br>
+
+
+        {{ form.radio_task3(type="radio", id="option3_radio")}}
+        {{ form.radio_task3.label }}<br><br>
+
+        
+        {{ form.text_task4.label }}<br>
+        {{ form.text_task4(id="option4", type="text")}}<br><br>
+
+
+        {{ form.radio_task4(type="radio", id="option4_radio")}}
+        {{ form.radio_task4.label }}<br><br>
+        
+        {{ form.submit(type="submit", class="btn btn-success")}}
+    </form>
+</div>
+<script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://snipp.ru/cdn/autosize/dist/autosize.min.js"></script>
+<script>
+autosize($('#textarea'));
+</script>
+{% endblock %} 

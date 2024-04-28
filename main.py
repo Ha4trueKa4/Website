@@ -11,7 +11,6 @@ from data.forms.task import TaskForm, UpdateTaskForm
 from data.forms.register import RegisterForm
 from data.forms.course import CourseForm
 from data.forms.lesson import LessonForm, TheoryForm, CreateTaskForm
-from requests import post, get
 import os
 
 

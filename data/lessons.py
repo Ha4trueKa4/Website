@@ -11,9 +11,9 @@ class Lesson(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, unique=True)
-    theory = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    theory_title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    completed_by_users = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    theory = sqlalchemy.Column(sqlalchemy.String, default='')
+    theory_title = sqlalchemy.Column(sqlalchemy.String, default='')
+    completed_by_users = sqlalchemy.Column(sqlalchemy.String, default='')
     id_in_course = sqlalchemy.Column(sqlalchemy.Integer)
     course_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("cources.id"))
 

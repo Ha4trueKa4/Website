@@ -23,11 +23,7 @@
 
 
 #textarea {
-	display: block;
 	width: 500px;
-	box-sizing: border-box;
-	margin: 0 0 5px 0;
-	padding: 10px;
 	border: solid 2px #e06969;
 	background-color: #fff;
 	min-height: 54px;
@@ -41,4 +37,14 @@
 .edit-form {
     background-color: #fff;
     border-radius: 10px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.form-input {
+    border-radius: 10px;
+    border: lightgreen solid 1px;
+    width: 80%;
 }

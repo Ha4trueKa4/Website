@@ -1,5 +1,5 @@
 import flask_login
-from flask import Flask, redirect, render_template, jsonify, make_response
+from flask import Flask, redirect, render_template, jsonify, make_response, request
 from data import db_session, courses_api
 from data.users import User
 from data.courses import Course
@@ -10,8 +10,7 @@ from data.forms.login import LoginForm
 from data.forms.task import TaskForm
 from data.forms.register import RegisterForm
 from data.forms.course import CourseForm
-from data.forms.lesson import LessonForm
-from data.forms.course import CourseForm
+from data.forms.lesson import LessonForm, TheoryForm, CreateTaskForm
 from requests import post, get
 import os
 
@@ -75,24 +74,23 @@ def course(course_name):
     course, lesson, lessons = get_data(course_name, None)
     is_course_completed = True
     for lsn in lessons:
-        if str(flask_login.current_user.id) not in lsn.completed_by_users:
-            is_course_completed = False
+        print(str(flask_login.current_user.id))
+        if lsn.completed_by_users is not None:
+            if str(flask_login.current_user.id) not in lsn.completed_by_users:
+                is_course_completed = False
 
     db_session.global_init('database.db')
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.id == flask_login.current_user.id).first()
     if is_course_completed:
-        user.completed_courses += f'{course.id}'
+        if str(course.id) not in user.completed_courses:
+            user.completed_courses += f'{course.id}'
     else:
-        user.completed_courses.replace(f'{course.id}', '')
-        tmp = list(user.completed_courses).copy()
-        for i in tmp:
-            if i == str(course.id):
-                tmp.remove(i)
-        user.completed_courses = ''.join(tmp)
+        user.completed_courses = user.completed_courses.replace(f'{course.id}', '')
     db_sess.commit()
 
     return render_template('course.html', course=course, lessons=lessons)
+
 
 
 @app.route('/learn/<string:course_name>/<string:lesson_id_in_course>')
@@ -254,10 +252,40 @@ def edit(course_name):
     return render_template('edit_course.html', course=course, lessons=lessons, form=form)
 
 
-@app.route('/teach/<string:course_name>/edit_theory/<int:id_lesson>')
+@app.route('/teach/<string:course_name>/edit_theory/<int:id_lesson>', methods=['GET', 'POST'])
 def edit_theory(course_name, id_lesson):
-    return render_template('edit-lesson-theory.html')
+    form = TheoryForm()
+    db_sess = db_session.create_session()
+    course = db_sess.query(Course).filter(Course.name == course_name).first()
+    lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).first()
+    if form.validate_on_submit():
+        lesson.name = form.name.data
+        lesson.theory_title = form.theory_title.data
+        lesson.theory = request.form.get('theory')
+        db_sess.commit()
+        return redirect(f'/teach/{course_name}/edit_theory/{id_lesson}')
+    return render_template('edit-lesson-theory.html', form=form, lesson=lesson, course=course)
 
+
+@app.route('/teach/<string:course_name>/edit_tasks/<int:id_lesson>', methods=['GET', 'POST'])
+@login_required
+def edit_task(course_name, id_lesson):
+    form = CreateTaskForm()
+    db_sess = db_session.create_session()
+    course = db_sess.query(Course).filter(Course.name == course_name).first()
+    lesson = db_sess.query(Lesson).filter(Lesson.course_id == course.id, Lesson.id_in_course == id_lesson).first()
+    tasks = db_sess.query(Task).filter(Task.lesson_id == lesson.id).all()
+    if form.validate_on_submit():
+        if not(db_sess.query(Task).filter(Task.name == form.name.data).all()):
+            task = Task()
+            task.name = form.name.data
+            task.lesson_id = lesson.id
+            task.id_in_lesson = len(tasks) + 1
+            db_sess.add(task)
+            db_sess.commit()
+            return redirect(f'/teach/{course_name}/edit_tasks/{id_lesson}')
+    tasks = db_sess.query(Task).filter(Task.lesson_id == lesson.id).all()
+    return render_template('edit-lesson-task.html', course=course, lesson=lesson, tasks=tasks, form=form)
 
 @app.route('/teach/<string:course_name>/delete/<int:id_lesson>', methods=['GET', 'POST'])
 def delete_lesson(course_name, id_lesson):

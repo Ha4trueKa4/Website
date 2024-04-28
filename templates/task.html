@@ -29,11 +29,11 @@
 {% block content %}
 {% set str_user_id = current_user.id | string() %}
 
-<div class="main-content" id="mc" >
+<div class="main-content">
     <div class="main-content-course content-shadow" style="{% if str_user_id in task.users_passed %}box-shadow: 0px 0px 5px 0px green; {% endif %}">
         <h5>{{ task.name }}</h5>
     </div>
-    <div class="main-content-course content-shadow" style="{% if str_user_id in task.users_passed %}box-shadow: 0px 0px 5px 0px green; {% endif %}">
+    <div class="main-content-course content-shadow mc" style="{% if str_user_id in task.users_passed %}box-shadow: 0px 0px 5px 0px green; {% endif %}">
         <p>{{ task.question | replace("|", "<br/>") | safe }}<p>
         <form action="" method="post" id="radio-form">
             {{ form.hidden_tag() }}
@@ -75,7 +75,7 @@
         </form>
     </div>
     {% if str_user_id in task.users_passed %}
-    <div class="main-content-course content-shadow" style="{% if str_user_id in task.users_passed %}box-shadow: 0px 0px 5px 0px green; {% endif %}">
+    <div class="main-content-course content-shadow mc" style="{% if str_user_id in task.users_passed %}box-shadow: 0px 0px 5px 0px green; {% endif %}">
         <h5>Выполнено <i class="fa-solid fa-check"></i></h5>
     </div>
     {% if tasks | length() - task_id > 0 %}
@@ -97,15 +97,21 @@
 </div>
 <script>
     function check(){
-    var correct = 0;
-    var radio = document.querySelector('input[name="answer"]:checked').value;
-    if (radio == "{{ task.correct_option }}"){
-        document.getElementById("submit_button1").style.display = "inline";
-        document.getElementById("mc").style.backgroundColor = "green";
-    } else {
-        document.getElementById("mc").style.backgroundColor = "red";
-        document.getElementById("submit_button1").style.display = "none";
-    }
-};
+        var correct = 0;
+        var radio = document.querySelector('input[name="answer"]:checked').value;
+        if (radio == "{{ task.correct_option }}") {
+            document.getElementById("submit_button1").style.display = "inline";
+            var mcElements = document.getElementsByClassName("mc");
+            for (var i = 0; i < mcElements.length; i++) {
+                mcElements[i].style.boxShadow = "0px 0px 5px 0px green";
+            }
+        } else {
+            var mcElements = document.getElementsByClassName("mc");
+            for (var i = 0; i < mcElements.length; i++) {
+                mcElements[i].style.boxShadow = "0px 0px 5px 0px red";
+            }
+            document.getElementById("submit_button1").style.display = "none";
+        }
+    };
 </script>
 {% endblock %}
